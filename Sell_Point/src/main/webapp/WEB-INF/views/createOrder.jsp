@@ -191,16 +191,29 @@
 	</div>
 	
 	<div id="paymentMethodForm" title="Pagar" style="font-size: 13px">
-		<p class="validateTips">Indique la cantidad de unidades.</p>
+		<p class="validateTips"></p>
 		<form>
 			<fieldset>
+				<table width="100%">
+					<tr>
+						<td align="left" style="height: 30px">
+							<input id="inSiteRadio" name="orderType" class="orderTypeRadio" type="radio" value="S" checked="checked"> Normal
+						</td>
+						<td align="center">
+							<input id="toCarryRadio" name="orderType" class="orderTypeRadio" type="radio" value="C"> Llevar
+						</td>
+						<td align="right">
+							<input id="xpressRadio" name="orderType" class="orderTypeRadio" type="radio" value="E" > Express
+						</td>
+					</tr>
+				</table>
 				<table width="100%">
 					<tr style="background-color: rgb(204, 204, 204)">
 						<td width="170px"><span style="font-size:18px;font-weight: bold">Total:</span></td>
 						<td align="center"><span id="total" style="font-size:18px;font-weight: bold">0.00</span></td>
 					</tr>
 					<tr>
-						<td><span>Forma de pago</span></td>
+						<td style="height: 30px"><span>Forma de pago</span></td>
 						<td>
 							<input id="cashRadio" name="paymentMethod" type="radio" checked="checked"> Efectivo
 							<input id="cardRadio" name="paymentMethod" type="radio"> Tarjeta

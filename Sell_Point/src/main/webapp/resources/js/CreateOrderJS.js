@@ -4,6 +4,7 @@ var products_quantity = 'null';
 var pName='null';
 var pPrice='null';
 var totalToPay=0;
+var orderType='S';
 
 $(function() {
 	
@@ -14,14 +15,15 @@ $(function() {
 	oTable = $('#productsListTable').dataTable( {
 		"bLengthChange": false,
 		"iDisplayLength" : 15,
-		"bFilter": false
+		"bFilter": false,
+		"bDestroy": true
     });	
 
 	// Init dialog-form
 	$("#dialog-form").dialog(
 	{
 		autoOpen : false,
-		height : 530,
+		height : 580,
 		width : 390,
 		modal : true,
 		buttons : {
@@ -53,6 +55,7 @@ $(function() {
 				acceptPaymentMethodForm($(this));
 			},
 			Cancel : function() {
+				orderType="S";
 				$(this).dialog("close");
 			}
 		},
@@ -118,6 +121,7 @@ $(function() {
 		$("#tbx_cashPayment").val($("#tbx_cashPayment").val()+""+$(this).html());
 		calculateChange($(this).html());
 	});
+	
 	// Payment method Radios events
 	$("#cashRadio").change(function() {
 		//if($(this).attr("checked")){
@@ -140,19 +144,39 @@ $(function() {
         //}	
 	});
 	
-	// Table click event
-	/*$('#productsListTable').find('tr').click(function(event) {
+	/**
+	 *  Evento change para los radioButton del tipo de orden
+	 */
+	$(".orderTypeRadio").change(function() {
+		
+		if($(this).attr('id')=="inSiteRadio"){
+			orderType="S";
+		}
+		if($(this).attr('id')=="toCarryRadio"){
+			orderType="C";
+		}
+		if($(this).attr('id')=="xpressRadio"){
+			orderType="E";
+		}
+	});
+	
+	/**
+	 * Evento click para la Tabla de productos
+	 */ 
+	$('#productsListTable').find('tr').click(function(event) {
 
 		$(oTable.fnSettings().aoData).each(function() {
 			$(this.nTr).removeClass('row_selected');
 		});
-
 		$(event.target.parentNode).addClass('row_selected');
-	});*/
+	});
 	
 });
 
-/* Get the rows which are currently selected */
+
+/**
+ * Get the rows which are currently selected
+ */
 function fnGetSelected(oTableLocal) {
 	var aReturn = new Array();
 	var aTrs = oTableLocal.fnGetNodes();
@@ -167,7 +191,11 @@ function fnGetSelected(oTableLocal) {
 }
 
 
-/* Quantity dialog accept event */
+/**
+ * Evento del boton aceptar para el Dialog de cantidad de productos
+ * 
+ * @param window El evento generado
+ */
 function acceptQuantityDialogEvent(window) {
 	
 	var bValid = true;
@@ -193,12 +221,45 @@ function acceptQuantityDialogEvent(window) {
 	}
 }
 
-/* Event method for paymentMethodForm */
+/**
+ * Evento del boton aceptar para el Dialog paymentMethodForm
+ * 
+ * @param window El evento generado
+ */
 function acceptPaymentMethodForm(window){
 	
+	var discount=$("#discountLabel").html();
+	var subtotal=$("#subTotalLabel").html();
+	var cash=($("#tbx_cashPayment").val()=="Tarjeta")?0.00:$("#tbx_cashPayment").val();
+	var total=$("#totalLabel").html();
+	var type=orderType;
 	
+	var data=buildAjaxData(["orderID","subTotal","discount","total","transactionNumber","status","type","cash"], 
+						   ["0",subtotal,discount,total,"\"NA\"","\"P\"","\""+type+"\"",cash]);
 	
+	$.ajax({
+	    url: "/sellpoint/createOrder/savedOrder/order",
+	    type: 'POST',
+	    dataType: 'json',
+	    data: data,//"{\"orderID\":0,\"subTotal\":100.00,\"discount\":0.00,\"total\":100.00}",
+	    contentType: 'application/json',
+	    mimeType: 'application/json',
+	    success: function(data) {
+	        alert(data.orderID + " " + data.total);
+	        cleanForm();
+	    },
+	    error:function(data,status,er) {
+	        alert("error: "+data+" status: "+status+" er:"+er);
+	    }
+	});	
 }
+
+
+/**
+ * Calcula el cambio
+ * 
+ * @param number Efectivo recibido
+ */
 function calculateChange(number){
 	
 	var cash=$("#tbx_cashPayment").val();
@@ -211,7 +272,9 @@ function calculateChange(number){
 	}
 }
 
-/* Validation methods */
+/**
+ *  Validacion de datos para los formularios 
+ */
 function checkRegexp(o, regexp, n) {
 	if (!(regexp.test(o.val()))) {
 		o.addClass("ui-state-error");
@@ -253,4 +316,41 @@ function calculatesTotalToPay(operation, amount){
 	
 	$("#subTotalLabel").html(totalToPay);
 	$("#totalLabel").html(totalToPay);
+}
+
+/**
+ * Cleans the page and puts all data in Zeros
+ */
+function cleanForm() {
+	
+	$("#discountLabel").html("0.00");
+	$("#subTotalLabel").html("0.00");
+	$("#totalLabel").html("0.00");	
+	$("#productsListTable").dataTable().fnClearTable();
+	orderType="S";
+}
+
+/**
+ * Genera el JSON con los datos pasados por parametros.
+ * Los valores deben ir de acuerdo al orden de los campos 
+ * 
+ * @param fields
+ * @param values
+ */
+function buildAjaxData(fields, values){
+	
+	var data="";
+	
+	//if(fields.length == values.lenght){		
+		data="{";
+		for(var i=0;i<values.length;i++){			
+			if(i==(values.length-1)){
+				data+="\""+fields[i]+"\":"+values[i];
+			}else{			
+				data+="\""+fields[i]+"\":"+values[i]+",";
+			}
+		}	
+		data+="}";
+	//}	
+	return data;
 }

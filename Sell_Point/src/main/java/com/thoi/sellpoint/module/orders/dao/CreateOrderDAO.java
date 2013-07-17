@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.thoi.sellpoint.common.database.DBConnection;
+import com.thoi.sellpoint.common.util.LoggerService;
+import com.thoi.sellpoint.module.orders.dto.OrderDTO;
 import com.thoi.sellpoint.module.orders.dto.ProductDTO;
 
 /**
@@ -16,6 +18,8 @@ import com.thoi.sellpoint.module.orders.dto.ProductDTO;
 public class CreateOrderDAO {
 	
 	static String SELECT_ALL_PRODUCTS_QUERY="SELECT * FROM db_thoi.tb_producto";
+	static String INSERT_NEW_ORDER_QUERY="INSERT INTO tb_factura (SubTotal, Descuento, Total, Num_Transaccion, Tipo, Estado, Efectivo) VALUES (?,?,?,?,?,?,?)";
+	
 	static DBConnection connection;
 	static PreparedStatement psSelect = null;
 	
@@ -32,8 +36,6 @@ public class CreateOrderDAO {
 				if (null == psSelect) {
 		           	psSelect = connection.getConexion().prepareStatement(SELECT_ALL_PRODUCTS_QUERY);
 		        }
-				
-	            // psSelect.setInt(1, "valor del parametro");
 	            return convertResultSetToOrder(psSelect.executeQuery());
 	            
 	        } catch (Exception e) {
@@ -42,6 +44,33 @@ public class CreateOrderDAO {
 	            connection.closeConnection();
 	            return null;
 	        }
+	}
+	
+	/**
+	 * Crea una nueva factura en la base de datos
+	 * 
+	 * @param order El objeto que contiene los datos de la orden
+	 */
+	public static void createOrder(OrderDTO order){
+		
+		try {
+		 	connection= new DBConnection();		 	
+			psSelect = connection.getConexion().prepareStatement(INSERT_NEW_ORDER_QUERY);
+			
+            psSelect.setDouble(1, order.getSubTotal());
+            psSelect.setDouble(2, order.getDiscount());
+            psSelect.setDouble(3, order.getTotal());
+            psSelect.setString(4, order.getTransactionNumber());
+            psSelect.setString(5, String.valueOf(order.getType()));
+            psSelect.setString(6, String.valueOf(order.getStatus()));
+            psSelect.setDouble(7, order.getCash());
+            psSelect.executeUpdate();
+            
+        } catch (Exception e) {
+            LoggerService.logException(e);
+            connection.closeStatement(psSelect);
+            connection.closeConnection();
+        }		
 	}
 	
 	/**
@@ -57,9 +86,6 @@ public class CreateOrderDAO {
         while (result.next()) {
         	productList.add(new ProductDTO(result.getInt(1), result.getString(2), result.getDouble(3)));
         }
-        
-        //closeStatement(psSelect);
-        //closeConnection();
         return productList;
 	}
 }
