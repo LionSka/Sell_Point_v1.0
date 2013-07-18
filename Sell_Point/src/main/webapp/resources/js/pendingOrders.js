@@ -8,11 +8,12 @@ $(function() {
 	/************** Init jquery components **************************************/
 	/****************************************************************************/
 	//Init productsListTable
-	oTable = $('#ordersListTable').dataTable( {
+	oTable = $('#ordersListTable').dataTable({
 		"bLengthChange": false,
 		"iDisplayLength" : 15,
 		"bFilter": false,
-		"bDestroy": true
+		"bDestroy": true,
+		"sAjaxSource": '/sellpoint/pendingOrders/ajax/getPendingOrders'
     });
 	
 	/**********************************************************************/

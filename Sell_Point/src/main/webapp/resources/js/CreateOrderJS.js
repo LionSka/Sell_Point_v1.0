@@ -211,7 +211,7 @@ function acceptQuantityDialogEvent(window) {
 			$('#productsListTable').dataTable().fnAddData( 
 					[products_quantity, pName, pPrice, (pPrice*products_quantity) ] 
 			);
-			calculatesTotalToPay("+",(pPrice*products_quantity))
+			calculatesTotalToPay("+",(pPrice*products_quantity));
 		}
 		products_quantity='null';
 		pName='null';

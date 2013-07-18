@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 
+import com.thoi.sellpoint.common.util.LoggerService;
+
 /**
  * @author David Cascante
  *
@@ -29,12 +31,11 @@ public class DBConnection {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			connection = DriverManager.getConnection(server, user, password);
-			System.out.print("Conexion exitosa");
+			LoggerService.logMessage("Conexion exitosa");
 		}
 		
 		catch (Exception e) {
-			System.out.println("Imposible realizar conexion con la BD");
-			e.printStackTrace();
+			LoggerService.logException(e);
 			throw e;
 		}
 	}
@@ -50,8 +51,7 @@ public class DBConnection {
 			} 
 			
 			catch (Exception e) {
-				System.out.print("No es posible cerrar el ResulSet");
-				e.printStackTrace();
+				LoggerService.logException(e);
 			}
 		}
 	}
@@ -67,8 +67,7 @@ public class DBConnection {
 			} 
 			
 			catch (Exception e) {
-				System.out.print("No es posible cerrar statement");
-				e.printStackTrace();
+				LoggerService.logException(e);
 			}
 		}
 	}
@@ -82,12 +81,11 @@ public class DBConnection {
 
 			try {
 				connection.close();
-				System.out.print("Conexion cerrada");
+				LoggerService.logMessage("Conexion cerrada");
 			} 
 			
 			catch (Exception e) {
-				System.out.print("No es posible cerrar la conexion");
-				e.printStackTrace();
+				LoggerService.logException(e);
 			}
 		}
 	}	

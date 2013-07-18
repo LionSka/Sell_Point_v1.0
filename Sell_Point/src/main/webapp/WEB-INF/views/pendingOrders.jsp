@@ -19,7 +19,7 @@
 
 </head>
 <body>
-	<table id="mainContentTable">
+	<table id="mainContentTable" width="100%">
 		<tr>
 			<td valign="top" style="background-color: yellow;">
 				<input type="button" value="Refrescar" id="refreshButton"/>
@@ -31,10 +31,10 @@
 					<table cellpadding="0" cellspacing="0" border="0" class="display" id="ordersListTable" width="100%">
 						<thead>
 							<tr>
-								<th>Cantidad</th>
-								<th width="50%">Producto</th>
-								<th>Unidad</th>
-								<th>Total</th>
+								<th width="20%"># Orden</th>
+								<th width="40%">Fecha/Hora</th>
+								<th width="20%">Usuario</th>
+								<th width="20%">Estado</th>
 							</tr>
 						</thead>
 						<tbody> </tbody>
