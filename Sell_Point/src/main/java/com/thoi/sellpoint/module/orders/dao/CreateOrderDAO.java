@@ -18,7 +18,7 @@ import com.thoi.sellpoint.module.orders.dto.ProductDTO;
 public class CreateOrderDAO {
 	
 	static String SELECT_ALL_PRODUCTS_QUERY="SELECT * FROM db_thoi.tb_producto";
-	static String INSERT_NEW_ORDER_QUERY="INSERT INTO tb_factura (SubTotal, Descuento, Total, Num_Transaccion, Tipo, Estado, Efectivo) VALUES (?,?,?,?,?,?,?)";
+	static String INSERT_NEW_ORDER_QUERY="INSERT INTO tb_factura (SubTotal, Descuento, Total, Num_Transaccion, Tipo, Estado, Efectivo, Fecha, Usuario) VALUES (?,?,?,?,?,?,?,?,?)";
 	
 	static DBConnection connection;
 	static PreparedStatement psSelect = null;
@@ -64,6 +64,9 @@ public class CreateOrderDAO {
             psSelect.setString(5, String.valueOf(order.getType()));
             psSelect.setString(6, String.valueOf(order.getStatus()));
             psSelect.setDouble(7, order.getCash());
+            //psSelect.setDate(8, new java.sql.Date(cal.getTime().getTime()));
+            psSelect.setTimestamp(8, new java.sql.Timestamp(order.getDate().getTime()));
+            psSelect.setString(9, order.getUser());
             psSelect.executeUpdate();
             
         } catch (Exception e) {

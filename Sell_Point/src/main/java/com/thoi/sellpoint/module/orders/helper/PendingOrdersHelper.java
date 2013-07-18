@@ -1,5 +1,6 @@
 package com.thoi.sellpoint.module.orders.helper;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import com.thoi.sellpoint.module.orders.dto.OrderDTO;
@@ -7,8 +8,8 @@ import com.thoi.sellpoint.module.orders.dto.OrderDTO;
 public class PendingOrdersHelper {
 
 	public static String convertListToJSON(ArrayList<OrderDTO> list){
-		//"{ \"aaData\": [[2, \"17/07/2013\",\"jcascantes206\",\"Pendiente\"], [3, \"17/07/2013\",\"jcascantes206\",\"Pendiente\"], [4, \"17/07/2013\",\"jcascantes206\",\"Pendiente\"]] }";
-		//{"aaData":[2, "17-07-2013 12:03pm", "jcascantes206", "Pendiente"], [3, "17-07-2013 12:03pm", "jcascantes206", "Pendiente"], [4, "17-07-2013 12:03pm", "jcascantes206", "Pendiente"]}
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyyy hh:mm:ss");
 		int listSize=list.size();
 		OrderDTO order=new OrderDTO();
 		String ajaxData="{\"aaData\":[";		
@@ -17,9 +18,9 @@ public class PendingOrdersHelper {
 			order=list.get(i);
 			
 			if(i==(listSize-1)){
-				ajaxData+= "[" + order.getOrderID() + ", \"17-07-2013 12:03pm\", \"jcascantes206\", \"" + getStatusName(order.getStatus()) +"\"]";
+				ajaxData+= "[" + order.getOrderID() + ", \""+dateFormat.format(order.getDate())+"\", \""+order.getUser()+"\", \"" + getStatusName(order.getStatus()) +"\"]";
 			}else{
-				ajaxData+= "["+ order.getOrderID() + ", \"17-07-2013 12:03pm\", \"jcascantes206\", \"" + getStatusName(order.getStatus()) +"\"], ";
+				ajaxData+= "["+ order.getOrderID() + ", \""+dateFormat.format(order.getDate())+"\", \""+order.getUser()+"\", \"" + getStatusName(order.getStatus()) +"\"], ";
 			}
 		}
 		ajaxData+="]}";

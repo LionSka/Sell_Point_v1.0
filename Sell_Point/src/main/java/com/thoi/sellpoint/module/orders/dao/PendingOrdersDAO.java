@@ -82,7 +82,9 @@ public class PendingOrdersDAO {
         				result.getString("Num_Transaccion"), 
         				result.getDouble("Efectivo"), 
         				result.getString("Estado").charAt(0), 
-        				result.getString("Tipo").charAt(0)
+        				result.getString("Tipo").charAt(0),
+        				result.getTimestamp("Fecha"),
+        				result.getString("Usuario")
         	));
         }
         return orderList;

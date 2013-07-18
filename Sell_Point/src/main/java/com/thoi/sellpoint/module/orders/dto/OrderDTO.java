@@ -1,6 +1,7 @@
 package com.thoi.sellpoint.module.orders.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class OrderDTO implements Serializable{
 	
@@ -14,6 +15,8 @@ public class OrderDTO implements Serializable{
 	double cash;
 	char status;
 	char type;
+	Date date;
+	String user;
 	
 	/** Código de estado para una orden que se encuentra pendiente de entrega*/
 	public static char ORDER_STATUS_PENDING='P';
@@ -30,10 +33,11 @@ public class OrderDTO implements Serializable{
 	public OrderDTO() {
 		super();
 	}
+
 	
 	public OrderDTO(int orderID, double subTotal, double discount,
 			double total, String transactionNumber, double cash, char status,
-			char type) {
+			char type, Date date, String user) {
 		super();
 		this.orderID = orderID;
 		this.subTotal = subTotal;
@@ -43,56 +47,110 @@ public class OrderDTO implements Serializable{
 		this.cash = cash;
 		this.status = status;
 		this.type = type;
+		this.date = date;
+		this.user = user;
 	}
-	
-	
+
+
+
+
 	public int getOrderID() {
 		return orderID;
 	}
+
+
 	public void setOrderID(int orderID) {
 		this.orderID = orderID;
 	}
+
+
 	public double getSubTotal() {
 		return subTotal;
 	}
+
+
 	public void setSubTotal(double subTotal) {
 		this.subTotal = subTotal;
 	}
+
+
 	public double getDiscount() {
 		return discount;
 	}
+
+
 	public void setDiscount(double discount) {
 		this.discount = discount;
 	}
+
+
 	public double getTotal() {
 		return total;
 	}
+
+
 	public void setTotal(double total) {
 		this.total = total;
 	}
+
+
 	public String getTransactionNumber() {
 		return transactionNumber;
 	}
+
+
 	public void setTransactionNumber(String transactionNumber) {
 		this.transactionNumber = transactionNumber;
 	}
+
+
 	public double getCash() {
 		return cash;
 	}
+
+
 	public void setCash(double cash) {
 		this.cash = cash;
 	}
+
+
 	public char getStatus() {
 		return status;
 	}
+
+
 	public void setStatus(char status) {
 		this.status = status;
 	}
+
+
 	public char getType() {
 		return type;
 	}
+
+
 	public void setType(char type) {
 		this.type = type;
+	}
+
+
+	public Date getDate() {
+		return date;
+	}
+
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+
+	public String getUser() {
+		return user;
+	}
+
+
+	public void setUser(String user) {
+		this.user = user;
 	}
 	
 }

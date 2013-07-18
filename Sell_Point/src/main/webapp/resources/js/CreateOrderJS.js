@@ -234,8 +234,8 @@ function acceptPaymentMethodForm(window){
 	var total=$("#totalLabel").html();
 	var type=orderType;
 	
-	var data=buildAjaxData(["orderID","subTotal","discount","total","transactionNumber","status","type","cash"], 
-						   ["0",subtotal,discount,total,"\"NA\"","\"P\"","\""+type+"\"",cash]);
+	var data=buildAjaxData(["orderID","subTotal","discount","total","transactionNumber","status","type","cash","date","user"], 
+						   ["0",subtotal,discount,total,"\"NA\"","\"P\"","\""+type+"\"",cash,"null","\"jcascantes206\""]);
 	
 	$.ajax({
 	    url: "/sellpoint/createOrder/savedOrder/order",
